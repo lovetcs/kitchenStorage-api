@@ -34,7 +34,7 @@ public class ksController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Void> updateItem(@PathVariable String id, @RequestBody ShopEntity item) {
+    public ResponseEntity<Void> updateItem(@PathVariable String id, @RequestBody ksEntity item) {
         ksService.updateItem(id,item);
         return ResponseEntity.noContent().build();
     }
