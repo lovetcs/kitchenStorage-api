@@ -1,4 +1,6 @@
 package com.example.kitchenStorage.lovet;
 
-public class ksRepo {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ksRepo extends JpaRepository<ksEntity, String> {
 }
