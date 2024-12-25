@@ -18,7 +18,7 @@ public class ksController {
     public String addItem(@RequestBody ksEntity item){
         ksService.addItem(item);
 
-        return "Item added to Shop.";
+        return "Item added to Storage.";
     }
 
     @GetMapping()
