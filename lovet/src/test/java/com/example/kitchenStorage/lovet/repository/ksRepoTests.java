@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -122,4 +123,30 @@ public class ksRepoTests {
         Assertions.assertThat(updatedItem.getStoredIn()).isEqualTo("Cupboard");
 
     }
+
+    @Test
+    public void KitchenStorageRepo_DeleteItem_ReturnItemIsEmpty() {
+
+        //Arrange
+        ksEntity ksentity = ksEntity.builder()
+                .name("Grapefruit")
+                .categoryName("Fruits")
+                .quantity(10)
+                .storedIn("Fridge")
+                .expirationDate(LocalDate.of(2024, 12, 31))
+                .build();
+
+        ksrepo.save(ksentity);
+
+        ksrepo.deleteById(ksentity.getName());
+        Optional<ksEntity> ksEntityReturn = ksrepo.findById(ksentity.getName());
+
+        //Act
+
+
+        //Assert
+        Assertions.assertThat(ksEntityReturn).isEmpty();
+
+    }
+
 }
