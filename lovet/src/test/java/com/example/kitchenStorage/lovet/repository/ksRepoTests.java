@@ -96,4 +96,30 @@ public class ksRepoTests {
         Assertions.assertThat(ksList).isNotNull();
 
     }
+
+    @Test
+    public void KitchenStorageRepo_UpdateItem_ReturnItemNotNull() {
+
+        //Arrange
+        ksEntity ksentity = ksEntity.builder()
+                .name("Grapefruit")
+                .categoryName("Fruits")
+                .quantity(10)
+                .storedIn("Fridge")
+                .expirationDate(LocalDate.of(2024, 12, 31))
+                .build();
+
+        ksrepo.save(ksentity);
+        ksEntity ksItemSave = ksrepo.findById(ksentity.getName()).get();
+
+        ksItemSave.setStoredIn("Cupboard");
+
+        //Act
+        ksEntity updatedItem = ksrepo.save(ksItemSave);
+
+        //Assert
+        Assertions.assertThat(updatedItem.getStoredIn()).isNotNull();
+        Assertions.assertThat(updatedItem.getStoredIn()).isEqualTo("Cupboard");
+
+    }
 }
