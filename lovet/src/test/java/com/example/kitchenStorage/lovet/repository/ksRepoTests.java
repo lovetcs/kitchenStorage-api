@@ -46,6 +46,7 @@ public class ksRepoTests {
     @Test
     public void KitchenStorageRepo_GetAll_ReturnMoreThanOneItem() {
 
+        //Arrange
         ksEntity ksentity = ksEntity.builder()
                 .name("Grapefruit")
                 .categoryName("Fruits")
@@ -65,10 +66,34 @@ public class ksRepoTests {
         ksrepo.save(ksentity);
         ksrepo.save(ksentity2);
 
+        //Act
         List<ksEntity> ksList = ksrepo.findAll();
 
+        //Assert
         Assertions.assertThat(ksList).isNotNull();
         Assertions.assertThat(ksList.size()).isEqualTo(2);
+
+    }
+
+    @Test
+    public void KitchenStorageRepo_FindByNameId_ReturnItemByID() {
+
+        //Arrange
+        ksEntity ksentity = ksEntity.builder()
+                .name("Grapefruit")
+                .categoryName("Fruits")
+                .quantity(10)
+                .storedIn("Fridge")
+                .expirationDate(LocalDate.of(2024, 12, 31))
+                .build();
+
+        ksrepo.save(ksentity);
+
+        //Act
+        ksEntity ksList = ksrepo.findById(ksentity.getName()).get();
+
+        //Assert
+        Assertions.assertThat(ksList).isNotNull();
 
     }
 }
