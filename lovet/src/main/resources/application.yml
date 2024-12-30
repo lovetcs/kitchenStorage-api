@@ -11,11 +11,14 @@ spring:
     password: root
   security:
     user:
-      name: lovetcs
-      password: password
-
+      name: root
+      password: root
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
     open-in-view: true
+
+logging:
+  level:
+    org.springframework.security: DEBUG

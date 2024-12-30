@@ -1,4 +1,4 @@
-package com.example.kitchenStorage.lovet;
+package com.example.kitchenStorage.lovet.configs;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
