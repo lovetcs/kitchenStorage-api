@@ -86,8 +86,22 @@ public class ksControllerTests {
     @Test
     public void testGetAllItems() throws Exception {
         List<ksEntity> mockItems = Arrays.asList(
-                new ksEntity("Item1", "Category1", 1, "Location1", LocalDate.now()),
-                new ksEntity("Item2", "Category2", 2, "Location2", LocalDate.now())
+                ksEntity.builder()
+                        .id(1L)
+                        .name("Item1")
+                        .categoryName("Category1")
+                        .quantity(1)
+                        .storedIn("Location1")
+                        .expirationDate(LocalDate.now())
+                        .build(),
+                ksEntity.builder()
+                        .id(2L)
+                        .name("Item2")
+                        .categoryName("Category2")
+                        .quantity(2)
+                        .storedIn("Location2")
+                        .expirationDate(LocalDate.now())
+                        .build()
         );
 
         when(ksservice.getAllItems()).thenReturn(mockItems);

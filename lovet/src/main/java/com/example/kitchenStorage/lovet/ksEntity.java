@@ -1,9 +1,7 @@
 package com.example.kitchenStorage.lovet;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,19 +18,24 @@ import java.time.LocalDate;
 public class ksEntity {
 
     @Id
-    @Column(name = "name")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "name", unique = true)
     private String name;
 
+    @JsonProperty("category_name")
     @Column(name = "category_name")
     private String categoryName;
 
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "storedIn")
+    @JsonProperty("stored_in")
+    @Column(name = "stored_in")
     private String storedIn;
 
+    @JsonProperty("expiration_date")
     @Column(name = "expiration_date")
     private LocalDate expirationDate;
-
 }
