@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 import java.time.LocalDate;
 
@@ -17,7 +16,7 @@ import java.time.LocalDate;
 @DynamoDbBean
 public class ksEntity {
 
-    private Long id;
+    private Integer ksid;
     private String name;
     private String categoryName;
     private Integer quantity;
@@ -25,8 +24,11 @@ public class ksEntity {
     private LocalDate expirationDate;
 
     @DynamoDbPartitionKey
-    public Long getId() {
-        return id;
+    public Integer getKsid() {
+        return ksid;
     }
 
+    public void setKsid(Integer ksid) {
+        this.ksid = ksid;
+    }
 }

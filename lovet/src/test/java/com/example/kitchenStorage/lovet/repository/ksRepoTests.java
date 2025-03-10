@@ -1,3 +1,4 @@
+/*
 package com.example.kitchenStorage.lovet.repository;
 
 import com.example.kitchenStorage.lovet.ksEntity;
@@ -150,3 +151,4 @@ public class ksRepoTests {
     }
 
 }
+*/

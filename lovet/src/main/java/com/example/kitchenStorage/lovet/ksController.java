@@ -26,22 +26,22 @@ public class ksController {
         return ksService.getAllItems();
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable String id) {
-        ksService.removeItem(id);
+    @DeleteMapping("/delete/{ksid}")
+    public ResponseEntity<Void> deleteItem(@PathVariable Integer ksid) {
+        ksService.removeItem(ksid);
 
         return  ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Void> updateItem(@PathVariable String id, @RequestBody ksEntity item) {
-        ksService.updateItem(id,item);
+    @PutMapping("/update/{ksid}")
+    public ResponseEntity<Void> updateItem(@PathVariable Integer ksid, @RequestBody ksEntity item) {
+        ksService.updateItem(ksid,item);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}")
-    public ksEntity getItem(@PathVariable String id) {
-        return ksService.getItem(id);
+    @GetMapping("/{ksid}")
+    public ksEntity getItem(@PathVariable Integer ksid) {
+        return ksService.getItem(ksid);
     }
 
 }

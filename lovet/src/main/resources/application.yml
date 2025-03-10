@@ -22,3 +22,8 @@ spring:
 logging:
   level:
     org.springframework.security: DEBUG
+
+aws:
+  accessKey: ${AWS_ACCESS_KEY_ID}
+  secretKey: ${AWS_SECRET_ACCESS_KEY}
+  region: ${AWS_REGION}REGION
