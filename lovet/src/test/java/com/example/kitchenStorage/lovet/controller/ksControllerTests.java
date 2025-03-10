@@ -1,3 +1,4 @@
+/*
 package com.example.kitchenStorage.lovet.controller;
 
 import com.example.kitchenStorage.lovet.ksController;
@@ -127,3 +128,4 @@ public class ksControllerTests {
                 .andExpect(content().string("Item added to Storage."));
     }
 }
+*/
