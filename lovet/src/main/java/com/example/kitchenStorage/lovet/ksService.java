@@ -44,10 +44,18 @@ public class ksService {
     }
 
     public void updateItem(Integer ksid, ksEntity item) {
-        // Check if item exists
-        getItem(ksid); // This will throw an exception if not found
-        item.setKsid(ksid);
-        table.putItem(item);
+        // Fetch the existing entity (simulate the existing entity logic)
+        ksEntity existingItem = getItem(ksid);  // Assume this fetches the entity if it exists
+
+        // Update the values from the incoming item
+        existingItem.setName(item.getName());
+        existingItem.setCategoryName(item.getCategoryName());
+        existingItem.setQuantity(item.getQuantity());
+        existingItem.setStoredIn(item.getStoredIn());  // This is the field we want to update
+        existingItem.setExpirationDate(item.getExpirationDate());
+
+        // Save the updated item back to the table
+        table.putItem(existingItem);
     }
 }
 

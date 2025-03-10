@@ -1,3 +1,4 @@
+/*
 package com.example.kitchenStorage.lovet.configs;
 
 import org.springframework.context.annotation.Bean;
@@ -22,3 +23,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+*/

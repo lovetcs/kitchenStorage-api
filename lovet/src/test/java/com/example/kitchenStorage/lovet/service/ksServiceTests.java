@@ -1,158 +1,124 @@
-/*
 package com.example.kitchenStorage.lovet.service;
 
-import com.example.kitchenStorage.lovet.dto.ksEntityDto;
 import com.example.kitchenStorage.lovet.ksEntity;
-import com.example.kitchenStorage.lovet.ksRepo;
 import com.example.kitchenStorage.lovet.ksService;
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.server.ResponseStatusException;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
+import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
-import java.time.LocalDate;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+@ExtendWith(MockitoExtension.class)
 public class ksServiceTests {
 
     @Mock
-    private ksRepo ksrepo;
+    private DynamoDbEnhancedClient enhancedClient;
 
-    @InjectMocks
-    private ksService ksservice;
+    @Mock
+    private DynamoDbTable<ksEntity> mockTable;
 
-    @Test
-    public void ksService_FindItem_FindsItemByID() {
-        ksEntity ksentity = ksEntity.builder()
-                .name("Grapefruit")
-                .categoryName("Alcohol")
-                .quantity(3)
-                .storedIn("Fridge")
-                .expirationDate(LocalDate.of(2024,12,12))
-                .build();
+    private ksService service;
 
-        when(ksrepo.findById("Grapefruit")).thenReturn(Optional.of(ksentity));
+    @BeforeEach
+    void setUp() {
+        // Set up the mock for the table
+        when(enhancedClient.table(anyString(), any(TableSchema.class))).thenReturn(mockTable);
 
-        ksEntity result = ksservice.getItem(1);
-
-        verify(ksrepo, times(1)).findById("Grapefruit");
-        Assertions.assertThat(result).isNotNull();
-        Assertions.assertThat(result.getName()).isEqualTo("Grapefruit");
-
+        // Create our service with the mock
+        service = new ksService(enhancedClient);
     }
 
     @Test
-    public void ksService_DeleteItem_DeletesItem() {
-        ksEntity ksentity = ksEntity.builder()
-                .name("Grapefruit")
-                .categoryName("Alcohol")
-                .quantity(3)
-                .storedIn("Fridge")
-                .expirationDate(LocalDate.of(2024,12,12))
-                .build();
+    void testAddItem() {
+        // Create a simple test item
+        ksEntity item = new ksEntity();
+        item.setKsid(1);
+        item.setName("Test Item");
 
-        when(ksrepo.findById("Grapefruit")).thenReturn(Optional.of(ksentity));
+        // Call the method
+        service.addItem(item);
 
-        ksservice.removeItem("Grapefruit");
-
-        verify(ksrepo, times(1)).delete(ksentity);
-
-    }
-
-
-    @Test
-    public void ksSerice_GetAllItems_ReturnsItemsInList(){
-        ksEntity ksentity = ksEntity.builder()
-                .name("Grapefruit")
-                .categoryName("Fruits")
-                .quantity(10)
-                .storedIn("Fridge")
-                .expirationDate(LocalDate.of(2024, 12, 31))
-                .build();
-
-        ksEntity ksentity2 = ksEntity.builder()
-                .name("Apple")
-                .categoryName("Fruits")
-                .quantity(2)
-                .storedIn("Fridge")
-                .expirationDate(LocalDate.of(2024, 12, 31))
-                .build();
-
-        List<ksEntity> expectedList = Arrays.asList(ksentity, ksentity2);
-
-        when(ksrepo.findAll()).thenReturn(expectedList);
-
-        List<ksEntity> result = ksservice.getAllItems();
-
-        // Assert
-        verify(ksrepo, times(1)).findAll();
-        assertNotNull(result);
-        assertEquals(2, result.size());
-
-
-    }
-    @Test
-    public void ksService_UpdateItem_UpdatesItem() {
-        ksEntity ksentity = ksEntity.builder()
-                .name("Grapefruit")
-                .categoryName("Fruits")
-                .quantity(10)
-                .storedIn("Fridge")
-                .expirationDate(LocalDate.of(2024, 12, 31))
-                .build();
-
-        when(ksrepo.existsById("Grapefruit")).thenReturn(true);
-        when(ksrepo.save(Mockito.any(ksEntity.class))).thenReturn(ksentity);
-
-        ksentity.setStoredIn("Cupboard");
-
-        ksservice.updateItem("Grapefruit", ksentity);
-
-        verify(ksrepo, times(1)).existsById("Grapefruit");
-        verify(ksrepo, times(1)).save(ksentity);
-
+        // Verify the mockTable.putItem was called with our item
+        verify(mockTable).putItem(item);
     }
 
     @Test
-    public void ksService_CreateItem_SavesItem() {
+    void testGetItem_Success() {
+        // Create a test item
+        Integer ksid = 1;
+        ksEntity item = new ksEntity();
+        item.setKsid(ksid);
+        item.setName("Test Item");
 
-        ksEntity ksentity = ksEntity.builder()
-                .name("Grapefruit")
-                .categoryName("Fruits")
-                .quantity(10)
-                .storedIn("Fridge")
-                .expirationDate(LocalDate.of(2024, 12, 31))
-                .build();
+        // Mock the return value
+        when(mockTable.getItem(any(Key.class))).thenReturn(item);
 
+        // Call the method
+        ksEntity result = service.getItem(ksid);
 
-
-        when(ksrepo.save(Mockito.any(ksEntity.class))).thenReturn(ksentity);
-
-        ksservice.addItem(ksentity);
-        //Act
-        verify(ksrepo, times(1)).save(ksentity);
-
-
+        // Verify result
+        assertEquals("Test Item", result.getName());
     }
 
+    @Test
+    void testGetItem_NotFound() {
+        // Mock behavior for item not found
+        when(mockTable.getItem(any(Key.class))).thenReturn(null);
+
+        // Call the method and expect exception
+        assertThrows(ResponseStatusException.class, () -> {
+            service.getItem(999);
+        });
+    }
+
+    @Test
+    void testRemoveItem() {
+        // Create a test item
+        Integer ksid = 1;
+        ksEntity item = new ksEntity();
+        item.setKsid(ksid);
+
+        // Mock behavior
+        when(mockTable.getItem(any(Key.class))).thenReturn(item);
+
+        // Call the method
+        service.removeItem(ksid);
+
+        // Verify deleteItem was called
+        verify(mockTable).deleteItem(any(Key.class));
+    }
+
+    @Test
+    void testUpdateItem() {
+        // Create existing item
+        Integer ksid = 1;
+        ksEntity existingItem = new ksEntity();
+        existingItem.setKsid(ksid);
+        existingItem.setName("Old Name");
+
+        // Updated item
+        ksEntity updatedItem = new ksEntity();
+        updatedItem.setName("New Name");
+
+        // Mock behavior
+        when(mockTable.getItem(any(Key.class))).thenReturn(existingItem);
+
+        // Call the method
+        service.updateItem(ksid, updatedItem);
+
+        // Verify putItem was called
+        verify(mockTable).putItem(any(ksEntity.class));
+    }
 }
-*/
