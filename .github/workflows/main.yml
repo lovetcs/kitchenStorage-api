@@ -3,10 +3,10 @@ name: Build and Deploy to EC2
 on:
   push:
     branches:
-      - main   # Trigger on push to the main branch
+      - master   # Trigger on push to the master branch
   pull_request:
     branches:
-      - main   # Trigger on pull request to the main branch
+      - master   # Trigger on pull request to the master branch
 
 jobs:
   build:
