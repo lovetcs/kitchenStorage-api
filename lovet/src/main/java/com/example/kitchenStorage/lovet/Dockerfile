@@ -2,7 +2,8 @@ FROM amazoncorretto:21
 
 WORKDIR /app
 
-COPY target/lovet-*.jar app.jar
+COPY lovet-*.jar app.jar
+
 
 EXPOSE 8081
 
